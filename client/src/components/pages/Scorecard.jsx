@@ -63,7 +63,14 @@ function MatchCard({ match, onClick, navigate }) {
             <p className="mc-result-nr">No Result</p>
           )}
         </div>
-        <ChevronRight size={16} className="mc-chevron" />
+        <div className="flex items-center gap-2">
+          {match.hasScorecard === false && (
+            <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 4, background: '#fef3c7', color: '#92400e', fontWeight: 600 }}>
+              Summary Only
+            </span>
+          )}
+          <ChevronRight size={16} className="mc-chevron" />
+        </div>
       </div>
     </button>
   );

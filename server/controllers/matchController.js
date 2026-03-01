@@ -18,6 +18,15 @@ exports.getRecentMatches = catchAsync(async (req, res) => {
     .limit(limit)
     .lean();
 
+  // Flag matches that have ball-by-ball delivery data (for scorecard availability)
+  const matchIds = matches.map(m => m.id);
+  const idsWithDeliveries = await Delivery.aggregate([
+    { $match: { match_id: { $in: matchIds } } },
+    { $group: { _id: '$match_id' } }
+  ]);
+  const deliverySet = new Set(idsWithDeliveries.map(d => d._id));
+  matches.forEach(m => { m.hasScorecard = deliverySet.has(m.id); });
+
   res.status(200).json({
     status: 'success',
     data: matches,
