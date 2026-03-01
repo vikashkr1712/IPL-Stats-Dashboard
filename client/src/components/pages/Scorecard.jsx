@@ -57,7 +57,7 @@ function MatchCard({ match, onClick, navigate }) {
         <div className="mc-result">
           {match.winner ? (
             <p className="mc-result-text">
-              {match.winner} won by {match.result_margin} {match.result}
+              {match.winner} won{match.result_margin > 0 ? ` by ${match.result_margin} ${match.result}` : ''}
             </p>
           ) : (
             <p className="mc-result-nr">No Result</p>
@@ -451,7 +451,7 @@ export default function Scorecard() {
               <div className="result-badge mt-3">
                 <Trophy size={14} style={{ color: '#1B2A72' }} />
                 <span style={{ fontSize: 13, fontWeight: 600, color: '#1B2A72' }}>
-                  <span className="team-link" onClick={() => navigate(`/teams?team=${encodeURIComponent(match.winner)}`)}>{match.winner}</span> won by {match.result_margin} {match.result}
+                  <span className="team-link" onClick={() => navigate(`/teams?team=${encodeURIComponent(match.winner)}`)}>{match.winner}</span>{match.result_margin > 0 ? ` won by ${match.result_margin} ${match.result}` : ' won'}
                 </span>
               </div>
             )}
@@ -476,18 +476,30 @@ export default function Scorecard() {
             </div>
           </div>
 
-          {/* Tabs */}
-          <div className="tab-bar" style={{ marginTop: 12 }}>
-            <button onClick={() => setActiveTab('scorecard')} className={`tab-item ${activeTab === 'scorecard' ? 'tab-item-active' : ''}`}>
-              Scorecard
-            </button>
-            <button onClick={() => { setActiveTab('commentary'); if (!showCommentary) loadCommentary(1); }} className={`tab-item ${activeTab === 'commentary' ? 'tab-item-active' : ''}`}>
-              Commentary
-            </button>
-          </div>
+          {/* Tabs — only show if innings data exists */}
+          {innings.length > 0 ? (
+            <div className="tab-bar" style={{ marginTop: 12 }}>
+              <button onClick={() => setActiveTab('scorecard')} className={`tab-item ${activeTab === 'scorecard' ? 'tab-item-active' : ''}`}>
+                Scorecard
+              </button>
+              <button onClick={() => { setActiveTab('commentary'); if (!showCommentary) loadCommentary(1); }} className={`tab-item ${activeTab === 'commentary' ? 'tab-item-active' : ''}`}>
+                Commentary
+              </button>
+            </div>
+          ) : (
+            <div style={{ textAlign: 'center', padding: '60px 20px', color: '#999' }}>
+              <div style={{ fontSize: 48, marginBottom: 12, opacity: 0.15 }}>🏏</div>
+              <p style={{ fontSize: 16, fontWeight: 600, color: '#666', marginBottom: 6 }}>Scorecard Not Available</p>
+              <p style={{ fontSize: 13, color: '#aaa' }}>Ball-by-ball data is not available for this {match.match_type || 'match'}. This is typically the case for playoff/final matches added as summary records.</p>
+              <button onClick={goBack} className="back-btn" style={{ margin: '20px auto 0', display: 'inline-flex' }}>
+                <ArrowLeft size={16} />
+                <span>Browse other matches</span>
+              </button>
+            </div>
+          )}
 
           {/* Scorecard Tab */}
-          {activeTab === 'scorecard' && (
+          {activeTab === 'scorecard' && innings.length > 0 && (
             <div className="tab-content">
               <div className="inning-tabs">
                 {innings.map(inn => (
@@ -540,7 +552,7 @@ export default function Scorecard() {
           )}
 
           {/* Commentary Tab */}
-          {activeTab === 'commentary' && (
+          {activeTab === 'commentary' && innings.length > 0 && (
             <div className="tab-content">
               <div className="inning-tabs">
                 {innings.map(inn => (
