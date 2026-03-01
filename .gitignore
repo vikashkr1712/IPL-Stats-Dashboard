@@ -39,3 +39,6 @@ desktop.ini
 # CricSheet data (large zip files)
 server/scripts/ipl_json.zip
 server/scripts/ipl_json/
+
+# Vite cache / build artifacts in wrong locations
+index.html/
