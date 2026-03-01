@@ -421,12 +421,17 @@ export default function Scorecard() {
               <span style={{ color: '#f59e0b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                 IPL {match.season?.split('/')[0]}
               </span>
+              {match.match_type && match.match_type !== 'T20' && match.match_type !== 'League' && (
+                <span style={{ background: '#1B2A72', color: '#fff', padding: '2px 10px', borderRadius: 4, fontSize: 11, fontWeight: 600 }}>
+                  {match.match_type}
+                </span>
+              )}
               <span>{new Date(match.date).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' })}</span>
               <span className="flex items-center gap-1"><MapPin size={12} /> {match.venue}{match.city ? `, ${match.city}` : ''}</span>
             </div>
 
             <div className="space-y-2">
-              {innings.map((inn) => (
+              {innings.length > 0 ? innings.map((inn) => (
                 <div key={inn.inning} className="score-strip">
                   <div className="flex items-center gap-2">
                     <TeamLogo team={inn.battingTeam} size={28} />
@@ -444,7 +449,24 @@ export default function Scorecard() {
                     <span style={{ fontSize: 13, color: '#999', marginLeft: 6 }}>({inn.overs} Ov)</span>
                   </div>
                 </div>
-              ))}
+              )) : (
+                /* Show both teams from match data when no innings exist */
+                [match.team1, match.team2].map((team) => (
+                  <div key={team} className="score-strip">
+                    <div className="flex items-center gap-2">
+                      <TeamLogo team={team} size={28} />
+                      <span
+                        className="team-link"
+                        style={{ fontSize: 15, fontWeight: 700, color: match.winner === team ? '#333' : '#888' }}
+                        onClick={() => navigate(`/teams?team=${encodeURIComponent(team)}`)}
+                      >
+                        {team}
+                      </span>
+                      {match.winner === team && <Trophy size={14} style={{ color: '#f59e0b' }} />}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
 
             {match.winner && (
