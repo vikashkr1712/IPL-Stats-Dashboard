@@ -1,44 +1,52 @@
-# Dependencies
+# ─── Dependencies ─────────────────────────────────────
 node_modules/
 
-# Build output
+# ─── Build output ────────────────────────────────────
 dist/
 client/dist/
 
-# Environment variables (secrets)
+# ─── Environment variables (secrets) ─────────────────
 .env
 .env.local
 .env.production
 .env.*.local
 
-# Large CSV data files (already imported into MongoDB)
+# ─── Large data files (already in MongoDB) ───────────
 archive/
 archive (1)/
+server/scripts/ipl_json.zip
+server/scripts/ipl_json/
+*.csv
 
-# Logs
+# ─── Logs ────────────────────────────────────────────
 *.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# OS files
+# ─── OS files ────────────────────────────────────────
 .DS_Store
 Thumbs.db
 desktop.ini
+*.lnk
 
-# IDE / Editor
+# ─── IDE / Editor ────────────────────────────────────
 .vscode/
 .idea/
 *.swp
 *.swo
+*.sublime-*
+*.code-workspace
 
-# Vercel
+# ─── Vercel ──────────────────────────────────────────
 .vercel
 
-# Misc
+# ─── Vite cache & temp artifacts ─────────────────────
+index.html/
+**/.vite/
 *.tgz
 .cache
-# CricSheet data (large zip files)
-server/scripts/ipl_json.zip
-server/scripts/ipl_json/
 
-# Vite cache / build artifacts in wrong locations
+# ─── Stray root-level files (not needed for deploy) ──
+/deccan_chargers_logo.jpeg
 index.html/
