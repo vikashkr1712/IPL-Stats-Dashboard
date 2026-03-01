@@ -197,7 +197,7 @@ app.get('/api', (req, res) => {
 // ─── Production: serve React build ─────────────────────────────────
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
-  app.get('*', (req, res, next) => {
+  app.get('{*path}', (req, res, next) => {
     // Only serve index.html for non-API routes
     if (req.originalUrl.startsWith('/api')) return next();
     res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'));
