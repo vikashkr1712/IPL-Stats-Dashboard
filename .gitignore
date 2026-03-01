@@ -36,3 +36,6 @@ desktop.ini
 # Misc
 *.tgz
 .cache
+# CricSheet data (large zip files)
+server/scripts/ipl_json.zip
+server/scripts/ipl_json/
