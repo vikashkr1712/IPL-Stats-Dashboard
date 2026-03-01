@@ -8,8 +8,20 @@ const API_BASE = import.meta.env.VITE_API_URL
 
 const api = axios.create({
   baseURL: API_BASE,
-  timeout: 30000,
+  timeout: 60000,   // 60s – handles Render free-tier cold starts (~30-50s)
   headers: { 'Content-Type': 'application/json' }
+});
+
+// Retry once on timeout/network error (handles Render cold-start)
+api.interceptors.response.use(undefined, async (err) => {
+  const config = err.config;
+  if (!config || config._retry) return Promise.reject(err);
+  if (err.code === 'ECONNABORTED' || err.message?.includes('Network Error')) {
+    config._retry = true;
+    config.timeout = 90000;
+    return api(config);
+  }
+  return Promise.reject(err);
 });
 
 // ─── In-memory API response cache (avoids refetching on page revisits) ──
